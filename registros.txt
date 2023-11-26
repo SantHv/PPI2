@@ -1,0 +1,18 @@
+Usuario: Santiago5412
+Contraseña: 54125412s
+Correo: santiago@gmail.com
+Nombre: santiago hincapie vi
+TipoUsuario: 1234
+
+Usuario: s
+Contraseña: s
+Correo: s@gmail.com
+Nombre: s
+TipoUsuario: 5412
+
+Usuario: a
+Contraseña: a
+Correo: a@gmail.com
+Nombre: a
+TipoUsuario: 1234
+

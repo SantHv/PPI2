@@ -1,0 +1,15 @@
+Tarea: santiago
+Observaciones: garcia
+Ruta de Imagen: imagenes_tareas\imagen_tarea_1.png
+---
+Tarea: oscar
+Observaciones: garcia
+Ruta de Imagen: imagenes_tareas\imagen_tarea_2.png
+---
+Tarea: santiago
+Observaciones: garcia
+Ruta de Imagen: imagenes_tareas\imagen_tarea_1.png
+---
+Tarea: amen
+Observaciones: gijgjg
+---
