@@ -16,3 +16,9 @@ Correo: a@gmail.com
 Nombre: a
 TipoUsuario: 1234
 
+Usuario: 312312
+Contraseña: 312312312312
+Correo: 21312312@gmail.com
+Nombre: 23123123
+TipoUsuario: 1312
+

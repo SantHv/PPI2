@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import (
 class TareasEmpleada(QMainWindow):
     def __init__(self):
         super(TareasEmpleada, self).__init__()
-
+        self.setStyleSheet("background-color: #BBF2FD;")
         self.setWindowTitle("Tareas Diarias - Empleada Doméstica")
         self.setWindowIcon(QtGui.QIcon("imagenes/icono1.png"))
 
@@ -167,6 +167,7 @@ class TareasEmpleada(QMainWindow):
         editar_tarea = QLineEdit(self)
         editar_tarea.setReadOnly(True)
         editar_tarea.setFixedSize(180, 40)
+        editar_tarea.setStyleSheet("background-color: white;")  # Fondo blanco
 
         etiqueta_observaciones = QLabel(f"Observaciones {index + 1}", self)
         etiqueta_observaciones.setFont(self.fuente)
@@ -175,15 +176,18 @@ class TareasEmpleada(QMainWindow):
         editar_observaciones = QTextEdit(self)
         editar_observaciones.setReadOnly(True)
         editar_observaciones.setFixedSize(200, 100)
+        editar_observaciones.setStyleSheet("background-color: white;")  # Fondo blanco
 
         checkbox_completado = QCheckBox(f"Tarea {index + 1} Completada", self)
 
         boton_subir_imagen = QPushButton(f"Subir Imagen {index + 1}", self)
         boton_subir_imagen.clicked.connect(lambda _, index=index: self.subir_imagen(index))
+        boton_subir_imagen.setStyleSheet("background-color: #50D4FA;")
 
         # Nuevo botón "Enviar" para cada tarea
         boton_enviar = QPushButton(f"Enviar {index + 1}", self)
         boton_enviar.clicked.connect(lambda _, index=index: self.enviar_tarea(index))
+        boton_enviar.setStyleSheet("background-color: #50D4FA;")  # Fondo blanco
 
         tarea_layout.addWidget(etiqueta_tarea)
         tarea_layout.addWidget(editar_tarea)

@@ -3,9 +3,10 @@ import sys
 from PyQt5 import QtGui
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QWidget, QDesktopWidget, QVBoxLayout, QLabel, QLineEdit, QApplication, QPushButton, \
-    QMainWindow, QMessageBox, QCheckBox, QComboBox
+from PyQt5.QtWidgets import QWidget, QDesktopWidget, QVBoxLayout, QLabel, QLineEdit, QApplication, \
+    QMainWindow, QMessageBox, QCheckBox, QComboBox, QPushButton
 
+from recuperarcontrase1 import RecuperarContrasenaVentana
 from registrar import registrar1
 from main import TareasEmpleada
 from ventana2 import Login5
@@ -14,7 +15,7 @@ from ventana2 import Login5
 class Login(QMainWindow):
     def __init__(self):
         super(Login, self).__init__()
-
+        self.setStyleSheet("background-color: #BBFDF8;")
         self.setWindowTitle("Inicio de sesión")
         self.setWindowIcon(QtGui.QIcon("imagenes/icono1.png"))
 
@@ -29,8 +30,6 @@ class Login(QMainWindow):
 
         self.setFixedWidth(self.ancho)
         self.setFixedHeight(self.alto)
-
-        self.set_background_image("imagenes/fnd1.png")
 
         self.letra1 = QtGui.QFont()
         self.letra1.setFamily("Andale mono")
@@ -93,6 +92,7 @@ class Login(QMainWindow):
         self.user_type_line.setFixedWidth(250)
         self.user_type_line.setStyleSheet("background-color: white")
         self.user_type_line.move(305, 320)
+        self.user_type_line.setMaxLength(4)
 
         self.botonCalcular = QPushButton(self)
         self.botonCalcular.setText("Iniciar Sesión")
@@ -114,17 +114,17 @@ class Login(QMainWindow):
         self.mostrar_contraseña_checkbox.setFixedWidth(200)
         self.mostrar_contraseña_checkbox.stateChanged.connect(self.toggle_password_visibility)
 
-        self.botonCalcular.clicked.connect(self.check_login)
-        self.botonRegistrar.clicked.connect(self.abrir_registrar)
+        # Texto para Recuperar Contraseña
+        self.textoRecuperarContraseña = QLabel(self)
+        self.textoRecuperarContraseña.setText("<u>Recuperar Contraseña</u>")
+        self.textoRecuperarContraseña.setFixedWidth(200)
+        self.textoRecuperarContraseña.setStyleSheet(
+            "color: blue; padding: 10px; text-decoration: underline; font-weight: bold;")
+        self.textoRecuperarContraseña.move(560, 300)
+        self.textoRecuperarContraseña.setFixedHeight(40)
+        self.textoRecuperarContraseña.mousePressEvent = self.abrir_recuperar_contrasena  # Conectar la función directamente al evento del ratón
 
-        self.login5_instance = None  # Nuevo atributo para almacenar la instancia de Login5
-
-    def set_background_image(self, image_path):
-        background_image = QtGui.QPixmap(image_path).scaled(self.ancho, self.alto)
-        background_label = QLabel(self)
-        background_label.setPixmap(background_image)
-        background_label.setGeometry(0, 0, self.ancho, self.alto)
-        background_label.lower()
+        self.login5_instance = None
 
     def check_login(self):
         username = self.editLogin.text()
@@ -168,7 +168,7 @@ class Login(QMainWindow):
                         QMessageBox.warning(self, 'Error', 'Tipo de usuario no reconocido.')
                     break
             else:
-                QMessageBox.warning(self, 'Error', 'Credenciales incorrectas.')
+                QMessageBox.warning(self, 'Error', 'Credenciales incorrectas o tipo de usuario no reconocido.')
         except FileNotFoundError:
             QMessageBox.warning(self, 'Error', 'No se encontró el archivo "registros.txt".')
         except Exception as e:
@@ -187,6 +187,12 @@ class Login(QMainWindow):
             self.editContraseña.setEchoMode(QLineEdit.Normal)
         else:
             self.editContraseña.setEchoMode(QLineEdit.Password)
+
+    def abrir_recuperar_contrasena(self, event):
+        # Mantener una referencia al objeto de la ventana
+        self.ventana_recuperar = RecuperarContrasenaVentana()
+        self.ventana_recuperar.show()
+
 
 if __name__ == '__main__':
     aplicacion1 = QApplication(sys.argv)

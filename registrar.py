@@ -8,7 +8,7 @@ class registrar1(QMainWindow):
     # Hacer el metodo de construccion de la ventana
     def __init__(self):
         super(registrar1, self).__init__()
-
+        self.setStyleSheet("background-color: #BBFDF8;")
         self.setWindowTitle("Registro")
 
         # Poner el color  de fondo a la ventana
@@ -125,7 +125,7 @@ class registrar1(QMainWindow):
         self.lineHotmail.setStyleSheet("background-color: White")
         self.lineHotmail.setFixedWidth(200)
         # Establecemos que solo se ingrese un numero maximo de 20 digitos
-        self.lineHotmail.setMaxLength(20)
+        self.lineHotmail.setMaxLength(50)
 
         self.lineHotmail.move(67, 320)
 
@@ -147,7 +147,7 @@ class registrar1(QMainWindow):
         self.lineNombre.setFixedWidth(200)
         self.lineNombre.setStyleSheet("background-color: White")
         # Establecemos que solo se ingrese un numero maximo de 20 digitos
-        self.lineNombre.setMaxLength(20)
+        self.lineNombre.setMaxLength(50)
 
         self.lineNombre.move(67, 400)
 
@@ -167,6 +167,7 @@ class registrar1(QMainWindow):
         self.employee_type_line = QLineEdit(self)
         self.employee_type_line.setPlaceholderText("Ingrese su codigo")
         self.employee_type_line.setFixedWidth(200)
+        self.employee_type_line.setMaxLength(4)
         self.employee_type_line.setStyleSheet("background-color:white")
         self.employee_type_line.move(67, 480)
 
@@ -208,11 +209,24 @@ class registrar1(QMainWindow):
         contrasena = self.editContraseña.text()
         correo = self.lineHotmail.text()
         nombre = self.lineNombre.text()
-        tipoUsuario = self.employee_type_line.text()  # Get the text from the QLineEdit
+        tipoUsuario = self.employee_type_line.text()  # Obtener el texto del QLineEdit
 
         # Verificar si el correo tiene un formato válido
         if not re.match(r"[^@]+@[^@]+\.[^@]+", correo):
             self.mostrar_mensaje("Advertencia", "Por favor, ingrese un correo válido.")
+            return
+
+        # Verificar el tipo de usuario
+        tipos_usuario_permitidos = ["1234", "5412"]
+
+        if tipoUsuario not in tipos_usuario_permitidos:
+            self.mostrar_mensaje("Advertencia", "Tipo de usuario no permitido"
+                                                "\ningrese un codigo valido.")
+            return
+
+        # Verificar que el campo de nombre contenga solo letras
+        if not re.match(r"^[a-zA-Z\s]+$", nombre):
+            self.mostrar_mensaje("Advertencia", "Por favor, ingrese un nombre válido (solo letras y espacios).")
             return
 
         if usuario and contrasena and correo and nombre and tipoUsuario:
