@@ -108,6 +108,7 @@ class Login(QMainWindow):
         self.botonRegistrar.move(325, 500)
         self.botonRegistrar.setFixedHeight(40)
 
+
         self.mostrar_contraseña_checkbox = QCheckBox("Mostrar Contraseña", self)
         self.mostrar_contraseña_checkbox.setStyleSheet("font-weight: bold;")
         self.mostrar_contraseña_checkbox.move(570, 240)
@@ -123,6 +124,8 @@ class Login(QMainWindow):
         self.textoRecuperarContraseña.move(560, 300)
         self.textoRecuperarContraseña.setFixedHeight(40)
         self.textoRecuperarContraseña.mousePressEvent = self.abrir_recuperar_contrasena  # Conectar la función directamente al evento del ratón
+        self.botonCalcular.clicked.connect(self.check_login)
+        self.botonRegistrar.clicked.connect(self.abrir_registrar)
 
         self.login5_instance = None
 

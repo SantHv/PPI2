@@ -1,24 +1,8 @@
-Usuario: Santiago5412
-Contraseña: 54125412s
+
+
+Usuario: santiago
+Contraseña: 5412
 Correo: santiago@gmail.com
-Nombre: santiago hincapie vi
-TipoUsuario: 1234
-
-Usuario: s
-Contraseña: s
-Correo: s@gmail.com
-Nombre: s
+Nombre: santiago hincapie villada
 TipoUsuario: 5412
-
-Usuario: a
-Contraseña: a
-Correo: a@gmail.com
-Nombre: a
-TipoUsuario: 1234
-
-Usuario: 312312
-Contraseña: 312312312312
-Correo: 21312312@gmail.com
-Nombre: 23123123
-TipoUsuario: 1312
 
