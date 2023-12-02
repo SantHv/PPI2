@@ -6,3 +6,21 @@ Correo: santiago@gmail.com
 Nombre: santiago hincapie villada
 TipoUsuario: 5412
 
+Usuario: santiago
+Contraseña: 1234
+Correo: santiago@gmail.com
+Nombre: santiago hincapie
+TipoUsuario: 1234
+
+Usuario: santiago1
+Contraseña: 1234
+Correo: santiago1@gmail.com
+Nombre: santiago hincapie
+TipoUsuario: 1234
+
+Usuario: jeferson
+Contraseña: jeferson
+Correo: jefersonsinj@gmail.com
+Nombre: jeferson
+TipoUsuario: 1234
+

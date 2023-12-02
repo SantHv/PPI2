@@ -1,15 +1,16 @@
-Tarea: santiago
-Observaciones: garcia
-Ruta de Imagen: imagenes_tareas\imagen_tarea_1.png
----
-Tarea: oscar
-Observaciones: garcia
+Tarea: hacer frijoles
+Observaciones: con poquita sal y mucha carne tambien hacer carnes
 Ruta de Imagen: imagenes_tareas\imagen_tarea_2.png
 ---
-Tarea: santiago
-Observaciones: garcia
+Tarea: hacer frijoles con helado
+Observaciones: frijolcedfc
 Ruta de Imagen: imagenes_tareas\imagen_tarea_1.png
 ---
-Tarea: amen
-Observaciones: gijgjg
+Tarea: hacer frijoles con helado
+Observaciones: frijolcedfc
+Ruta de Imagen: imagenes_tareas\imagen_tarea_1.png
+---
+Tarea: eree
+Observaciones: thyjuik
+Ruta de Imagen: imagenes_tareas\imagen_tarea_2.jpg
 ---

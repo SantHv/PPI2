@@ -3,7 +3,8 @@ from PyQt5 import QtGui, QtCore
 from PyQt5.QtGui import QFont, QPixmap
 from PyQt5.QtWidgets import (
     QMainWindow, QApplication, QLabel, QDesktopWidget,
-    QLineEdit, QPushButton, QMessageBox, QVBoxLayout, QDialog, QTextEdit, QHBoxLayout, QScrollArea, QFrame, QWidget
+    QLineEdit, QPushButton, QMessageBox, QVBoxLayout, QDialog, QTextEdit, QHBoxLayout, QScrollArea, QFrame, QWidget,
+    QComboBox
 )
 
 
@@ -132,7 +133,8 @@ class EditarTareasVentana(QDialog):
                 archivo.write(contenido_editado)
             QMessageBox.information(self, "Cambios Guardados", "Los cambios han sido guardados.")
         except Exception as e:
-            QMessageBox.warning(self, "Error al Guardar Cambios", f"No se pudieron guardar los cambios. Error: {str(e)}")
+            QMessageBox.warning(self, "Error al Guardar Cambios",
+                                f"No se pudieron guardar los cambios. Error: {str(e)}")
 
 
 class Login5(QMainWindow):
@@ -143,8 +145,8 @@ class Login5(QMainWindow):
         self.setStyleSheet("background-color: #BBF2FD;")
         self.setWindowTitle("Inicio de sesión")
 
-        self.ancho = 650
-        self.alto = 600
+        self.ancho = 1300
+        self.alto = 900
         self.resize(self.ancho, self.alto)
 
         # Centrar la ventana en la pantalla
@@ -161,44 +163,61 @@ class Login5(QMainWindow):
         fuente = QFont("Andale Mono", 18)
 
         # Crear elementos de la interfaz: etiquetas, campos de texto, botones, etc.
+        self.etiqueta_titulo = QLabel("Tareas Diarias", self)
+        self.etiqueta_titulo.move(550, 40)
+        self.etiqueta_titulo.setFont(fuente)
+        self.etiqueta_titulo.setFixedWidth(200)
+
         self.etiqueta_tarea = QLabel("Tarea", self)
-        self.etiqueta_tarea.move(150, 40)
+        self.etiqueta_tarea.move(150, 120)
         self.etiqueta_tarea.setFont(fuente)
         self.editar_tarea = QLineEdit(self)
-        self.editar_tarea.move(150, 90)
+        self.editar_tarea.move(150, 170)
         self.editar_tarea.setFixedWidth(200)
 
         self.etiqueta_observaciones = QLabel("Observaciones", self)
-        self.etiqueta_observaciones.move(150, 140)
+        self.etiqueta_observaciones.move(450, 120)
         self.etiqueta_observaciones.setFixedWidth(200)
         self.etiqueta_observaciones.setFont(fuente)
         self.editar_observaciones = QTextEdit(self)
-        self.editar_observaciones.move(150, 200)
-        self.editar_observaciones.setFixedWidth(210)
+        self.editar_observaciones.move(450, 170)
+        self.editar_observaciones.setFixedWidth(250)
         self.editar_observaciones.setFixedHeight(300)
-
         self.editar_observaciones.setAlignment(QtCore.Qt.AlignTop)
 
+        self.etiqueta_hora = QLabel("Hora de Tarea", self)
+        self.etiqueta_hora.move(750, 120)
+        self.etiqueta_hora.setFont(fuente)
+        self.etiqueta_hora.setFixedWidth(200)
+
+        self.combo_horas = QComboBox(self)
+        self.combo_horas.move(750, 170)
+        self.combo_horas.setFixedWidth(200)
+        horas = ["6:00 a 8:00 AM", "8:00 a 10:00 AM", "10:00 AM a 12:00 PM", "12:00 PM a 2:00 PM",
+                 "2:00 PM a 4:00 PM", "4:00 PM a 6:00 PM"]
+        self.combo_horas.addItems(horas)
+        self.combo_horas.setCurrentIndex(0)
+
         self.boton_tareas_completadas = QPushButton("Tareas Completadas", self)
-        self.boton_tareas_completadas.move(400, 300)
+        self.boton_tareas_completadas.move(400, 700)
         self.boton_tareas_completadas.clicked.connect(self.mostrar_ventana_tareas_completadas)
         self.boton_tareas_completadas.setFixedWidth(200)
         self.boton_tareas_completadas.setStyleSheet("background-color: #50D4FA;")
 
         self.boton_enviar = QPushButton("Enviar Tarea", self)
-        self.boton_enviar.move(400, 250)
+        self.boton_enviar.move(150, 700)
         self.boton_enviar.clicked.connect(self.enviar_detalles_tarea)
         self.boton_enviar.setFixedWidth(200)
         self.boton_enviar.setStyleSheet("background-color: #50D4FA;")
 
         self.boton_eliminar_tareas = QPushButton("Eliminar Todas las Tareas", self)
-        self.boton_eliminar_tareas.move(400, 350)
+        self.boton_eliminar_tareas.move(650, 700)
         self.boton_eliminar_tareas.clicked.connect(self.eliminar_todas_las_tareas)
         self.boton_eliminar_tareas.setFixedWidth(200)
         self.boton_eliminar_tareas.setStyleSheet("background-color: #50D4FA;")
 
         self.boton_editar_archivo = QPushButton("Editar Tareas", self)
-        self.boton_editar_archivo.move(400, 400)
+        self.boton_editar_archivo.move(900, 700)
         self.boton_editar_archivo.clicked.connect(self.abrir_ventana_editar_archivo)
         self.boton_editar_archivo.setFixedWidth(200)
         self.boton_editar_archivo.setStyleSheet("background-color: #50D4FA;")
@@ -207,30 +226,22 @@ class Login5(QMainWindow):
         self.editar_observaciones.setStyleSheet("background-color: white; border: 1px solid black;")
 
     def enviar_detalles_tarea(self):
-        # Obtener la tarea y las observaciones desde los campos de texto
         tarea = self.editar_tarea.text()
         observaciones = self.editar_observaciones.toPlainText()
+        hora = self.combo_horas.currentText()
 
-        # Validar que la tarea y las observaciones no estén vacías
-        if not tarea or not observaciones:
+        if not tarea or not observaciones or not hora:
             QMessageBox.warning(self, "Campos Vacíos", "Por favor, complete todos los campos.")
             return
 
-        # Crear una cadena con los detalles de la tarea
-        detalles_tarea = f"Tarea: {tarea}\nObservaciones: {observaciones}\n"
-
-        # Agregar una línea de guiones como separador
+        detalles_tarea = f"Tarea: {tarea}\nObservaciones: {observaciones}\nHora de Tarea: {hora}\n"
         detalles_tarea += "\n---\n"
 
-        # Guardar los detalles en un archivo de texto
         nombre_archivo = "detalles_tarea.txt"
         with open(nombre_archivo, "a") as archivo:
             archivo.write(detalles_tarea)
 
-        # Mostrar un mensaje de éxito
         QMessageBox.information(self, "Envío Exitoso", "Los detalles de la tarea se han enviado con éxito.")
-
-        # Limpiar los campos después de enviar la tarea
         self.limpiar_campos()
 
     def mostrar_ventana_tareas_completadas(self):
@@ -241,23 +252,21 @@ class Login5(QMainWindow):
             QMessageBox.warning(self, "Error", f"Error al abrir la ventana de tareas completadas: {str(e)}")
 
     def limpiar_campos(self):
-        # Limpiar los campos de tarea y observaciones
         self.editar_tarea.clear()
         self.editar_observaciones.clear()
 
     def eliminar_todas_las_tareas(self):
         try:
-            # Eliminar todas las tareas del archivo
             nombre_archivo = "detalles_tarea.txt"
             with open(nombre_archivo, "w") as archivo:
                 archivo.write("")
             QMessageBox.information(self, "Tareas Eliminadas", "Se han eliminado todas las tareas.")
         except Exception as e:
-            QMessageBox.warning(self, "Error al Eliminar Tareas", f"No se pudieron eliminar las tareas. Error: {str(e)}")
+            QMessageBox.warning(self, "Error al Eliminar Tareas",
+                                f"No se pudieron eliminar las tareas. Error: {str(e)}")
 
     def abrir_ventana_editar_archivo(self):
         try:
-            # Abrir la ventana de edición de archivo
             nombre_archivo = "detalles_tarea.txt"
             with open(nombre_archivo, "r") as archivo:
                 contenido = archivo.read()
@@ -269,7 +278,6 @@ class Login5(QMainWindow):
 
 
 if __name__ == '__main__':
-    # Configurar y mostrar la aplicación
     aplicacion1 = QApplication(sys.argv)
     v1 = Login5()
     v1.show()

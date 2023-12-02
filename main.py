@@ -1,13 +1,14 @@
 import sys
 import os
 import shutil
-from PyQt5 import QtGui
+from PyQt5 import QtGui, QtCore
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import (
     QMainWindow, QApplication, QLabel, QDesktopWidget,
     QLineEdit, QPushButton, QCheckBox, QFileDialog, QTextEdit,
     QVBoxLayout, QWidget, QHBoxLayout, QScrollArea, QMessageBox
 )
+
 
 class TareasEmpleada(QMainWindow):
     def __init__(self):
@@ -34,6 +35,11 @@ class TareasEmpleada(QMainWindow):
         # Layout principal
         layout_principal = QVBoxLayout()
 
+        # Agregar título "Tareas"
+        titulo_tareas = QLabel("Tareas", self)
+        titulo_tareas.setFont(QFont("Andale Mono", 18, QtGui.QFont.Bold))
+        layout_principal.addWidget(titulo_tareas, alignment=QtCore.Qt.AlignCenter)
+
         # Widget contenedor para tareas
         self.widget_tareas = QWidget(self)
         self.widget_tareas_layout = QVBoxLayout(self.widget_tareas)
@@ -46,7 +52,7 @@ class TareasEmpleada(QMainWindow):
         # Campos para mostrar hasta 5 tareas
         self.campos_tareas = []
 
-        for i in range(5):
+        for i in range(3):
             self.agregar_nueva_tarea()
 
         # Añadir el widget de tareas al layout principal
@@ -87,6 +93,7 @@ class TareasEmpleada(QMainWindow):
             tarea = self.campos_tareas[tarea_index]['Editar Tarea'].text()
             observaciones = self.campos_tareas[tarea_index]['Editar Observaciones'].toPlainText()
             ruta_imagen = self.campos_tareas[tarea_index]['Ruta Imagen']
+            hora_tarea = self.campos_tareas[tarea_index]['Hora Tarea'].text()
 
             # Validaciones
             if not tarea or not observaciones:
@@ -99,6 +106,8 @@ class TareasEmpleada(QMainWindow):
             if ruta_imagen:
                 detalles_tarea += f"\nRuta de Imagen: {ruta_imagen}"
 
+            detalles_tarea += f"\nHora de Tarea: {hora_tarea}"  # Agregar la hora
+
             # Agregar una línea de guiones como separador
             detalles_tarea += "\n---\n"
 
@@ -106,43 +115,43 @@ class TareasEmpleada(QMainWindow):
             with open("tareas_completadas.txt", "a") as archivo:
                 archivo.write(detalles_tarea)
 
-            QMessageBox.information(self, "Éxito", f"Tarea {tarea_index + 1} enviada y guardada en tareas_completadas.txt.")
+            QMessageBox.information(self, "Éxito", f"Tarea {tarea_index + 1} Enviada y guardada.")
             print(f"Tarea {tarea_index + 1} enviada y guardada en tareas_completadas.txt.")
         else:
             QMessageBox.warning(self, "Error", f"Marque la casilla de verificación para completar la tarea {tarea_index + 1}.")
+
+    # ...
 
     def mostrar_detalles_tarea(self):
         # Leer detalles de la tarea desde el archivo
         try:
             with open("detalles_tarea.txt", "r") as archivo:
-                lineas = archivo.readlines()
-                if lineas:
-                    # Dividir las líneas en bloques de 4 para cada tarea
-                    bloques_tareas = [lineas[i:i + 4] for i in range(0, len(lineas), 4)]
+                contenido = archivo.read()
 
-                    # Asegurar que haya suficientes elementos en self.campos_tareas
-                    while len(self.campos_tareas) < len(bloques_tareas):
-                        self.agregar_nueva_tarea()
+            tareas = contenido.split("---")[:-1]  # Dividir por "---" y excluir la última parte vacía
 
-                    # Recorrer cada bloque de tarea
-                    for i, bloque in enumerate(bloques_tareas):
-                        detalles_tarea = {}
-                        for linea in bloque:
-                            if "Tarea:" in linea:
-                                tarea = linea.split(":")[1].strip()
-                                detalles_tarea['Tarea'] = tarea
-                            elif "Observaciones:" in linea:
-                                observaciones = linea.split(":")[1].strip()
-                                detalles_tarea['Observaciones'] = observaciones
-                                break
+            # Asegurar que haya suficientes elementos en self.campos_tareas
+            while len(self.campos_tareas) < len(tareas):
+                self.agregar_nueva_tarea()
 
-                        # Mostrar detalles en la interfaz
-                        self.campos_tareas[i]['Editar Tarea'].setText(detalles_tarea.get('Tarea', ''))
-                        self.campos_tareas[i]['Editar Observaciones'].setPlainText(
-                            detalles_tarea.get('Observaciones', ''))
+            # Recorrer cada tarea
+            for i, tarea in enumerate(tareas):
+                # Limpiar espacios al principio y al final de cada línea
+                detalles_tarea = [linea.strip() for linea in tarea.strip().split('\n')]
+
+                tarea_texto = detalles_tarea[0].split(":")[1].strip()
+                observaciones = detalles_tarea[1].split(":")[1].strip()
+                hora_tarea = ':'.join(detalles_tarea[2:])  # Unir todas las partes restantes
+
+                # Mostrar detalles en la interfaz
+                self.campos_tareas[i]['Editar Tarea'].setText(tarea_texto)
+                self.campos_tareas[i]['Editar Observaciones'].setText(observaciones)
+                self.campos_tareas[i]['Hora Tarea'].setText(hora_tarea)
 
         except FileNotFoundError:
             print("El archivo detalles_tarea.txt no existe.")
+
+    # ...
 
     def agregar_nueva_tarea(self):
         # Agregar una nueva tarea al final de la lista campos_tareas
@@ -155,8 +164,11 @@ class TareasEmpleada(QMainWindow):
             'Checkbox Completado': tarea_layout.itemAt(4).widget(),
             'Boton Subir Imagen': tarea_layout.itemAt(5).widget(),
             'Boton Enviar': tarea_layout.itemAt(6).widget(),
-            'Ruta Imagen': ''
+            'Ruta Imagen': '',
+            'Hora Tarea': tarea_layout.itemAt(7).widget(),  # Agregar el nuevo campo de hora
         })
+
+    # ...
 
     def crear_tarea_layout(self, index):
         tarea_layout = QHBoxLayout()
@@ -169,14 +181,17 @@ class TareasEmpleada(QMainWindow):
         editar_tarea.setFixedSize(180, 40)
         editar_tarea.setStyleSheet("background-color: white;")  # Fondo blanco
 
-        etiqueta_observaciones = QLabel(f"Observaciones {index + 1}", self)
+        etiqueta_observaciones = QLabel(f"Detalles {index + 1}", self)
         etiqueta_observaciones.setFont(self.fuente)
         etiqueta_observaciones.setFixedWidth(200)
 
         editar_observaciones = QTextEdit(self)
-        editar_observaciones.setReadOnly(True)
         editar_observaciones.setFixedSize(200, 100)
         editar_observaciones.setStyleSheet("background-color: white;")  # Fondo blanco
+        editar_observaciones.setAlignment(QtCore.Qt.AlignTop)  # Alineación vertical superior
+        editar_observaciones.setReadOnly(True)  # Permitir edición
+        editar_observaciones.setWordWrapMode(
+            QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)  # Activar ajuste automático de líneas
 
         checkbox_completado = QCheckBox(f"Tarea {index + 1} Completada", self)
 
@@ -189,6 +204,13 @@ class TareasEmpleada(QMainWindow):
         boton_enviar.clicked.connect(lambda _, index=index: self.enviar_tarea(index))
         boton_enviar.setStyleSheet("background-color: #50D4FA;")  # Fondo blanco
 
+        # Nuevo campo de hora (QLineEdit no editable)
+        hora_tarea = QLineEdit(self)
+        hora_tarea.setReadOnly(True)
+        hora_tarea.setFixedSize(220, 40)
+        hora_tarea.setStyleSheet("background-color: white;")  # Fondo blanco
+        hora_tarea.setAlignment(QtCore.Qt.AlignCenter)  # Alinea el texto al centro
+
         tarea_layout.addWidget(etiqueta_tarea)
         tarea_layout.addWidget(editar_tarea)
         tarea_layout.addWidget(etiqueta_observaciones)
@@ -196,11 +218,16 @@ class TareasEmpleada(QMainWindow):
         tarea_layout.addWidget(checkbox_completado)
         tarea_layout.addWidget(boton_subir_imagen)
         tarea_layout.addWidget(boton_enviar)
+        tarea_layout.addWidget(hora_tarea)  # Agrega el nuevo campo de hora
 
         # Modifica la disposición para que los elementos se expandan verticalmente
         tarea_layout.setStretch(1, 1)  # Hace que editar_tarea se expanda verticalmente
+        tarea_layout.setStretch(3, 1)  # Hace que editar_observaciones se expanda verticalmente
 
         return tarea_layout
+
+    # ...
+
 
 # Bloque principal
 if __name__ == '__main__':
